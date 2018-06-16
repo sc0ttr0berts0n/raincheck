@@ -2,7 +2,7 @@
     "name": "raincheck",
     "version": "1.0.0",
     "description": "A personal, one-site-fits-all \"parse dark sky for this use or that use\" server",
-    "main": "app.js",
+    "main": "src/app.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node src/app.js"
