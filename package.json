@@ -1,0 +1,18 @@
+{
+    "name": "raincheck",
+    "version": "1.0.0",
+    "description": "A personal, one-site-fits-all \"parse dark sky for this use or that use\" server",
+    "main": "app.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node src/app.js"
+    },
+    "author": "Scott Robertson",
+    "license": "MIT",
+    "dependencies": {
+        "dark-sky": "^1.1.4",
+        "dotenv": "^5.0.1",
+        "express": "^4.16.3"
+    },
+    "repository": "https://github.com/sc0ttr0berts0n/dark-sky-weather-server.git"
+}
