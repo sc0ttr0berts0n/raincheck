@@ -3,3 +3,4 @@ Credentials.h
 .env
 .DS_Store
 yarn-error.log
+cache-*

@@ -1,5 +1,8 @@
 require('dotenv').load();
 
+// Set up fs read/write
+const fs = require('fs');
+
 // Init Dark Sky
 const DarkSky = require('dark-sky');
 const darksky = new DarkSky(process.env.DARK_SKY); // Your API KEY can be hardcoded, but I recommend setting it as an env variable.
@@ -27,12 +30,21 @@ class Raincheck {
         ];
     }
     getWeatherCategory() {
-        return this.getWeatherIcon().then(
-            data =>
-                this.weatherMap.find(cat =>
-                    cat.conditions.includes('clear-day')
-                ).name
-        );
+        return this.getWeatherIcon()
+            .then(weather => {
+                const weatherCategory = this.weatherMap.find(category =>
+                    category.conditions.includes(weather)
+                ).name;
+                this.writeDataWithTimestamp(
+                    'weather-category',
+                    weatherCategory
+                );
+                return weatherCategory;
+            })
+            .catch(weather => {
+                console.log(weather);
+                return 'Internal Error: ' + weather;
+            });
     }
 
     getWeatherIcon() {
@@ -44,9 +56,44 @@ class Raincheck {
                 exclude: ['currently', 'minutely', 'daily', 'alerts', 'flags']
             })
             .get()
-            .then(function(data) {
-                return data.hourly.icon;
+            .then(data => data.hourly.icon);
+    }
+
+    getMinutelyForecast() {
+        return darksky
+            .options({
+                latitude: process.env.LAT,
+                longitude: process.env.LON,
+                language: 'en',
+                exclude: ['currently', 'hourly', 'daily', 'alerts', 'flags']
+            })
+            .get()
+            .then(weather => weather.minutely.data)
+            .catch(data => {
+                console.log(weather.minutely.data);
+                return 'Internal Error: ' + weather.minutely.data;
             });
+    }
+    getSuperData() {
+        return darksky
+            .options({
+                latitude: process.env.LAT,
+                longitude: process.env.LON,
+                language: 'en'
+            })
+            .get()
+            .then(weather => weather)
+            .catch(data => {
+                console.log(weather);
+                return 'Internal Error: ' + weather;
+            });
+    }
+    writeDataWithTimestamp(name, data) {
+        let json = { time: Date.now(), data: data };
+        let path = './cache-' + name + '.json';
+        fs.writeFile(path, JSON.stringify(json), 'utf8', () =>
+            console.log(path + ' generated')
+        );
     }
 }
 

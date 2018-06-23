@@ -18,12 +18,31 @@ app.get('/', function(req, res) {
 });
 
 app.get('/raincheck', function(req, res) {
-    if (
-        req.query.key === process.env.SECRET_KEY &&
-        req.query.key !== undefined
-    ) {
+    if (keyIsValid(req)) {
         raincheck.getWeatherCategory().then(weather => res.send(weather));
     } else {
         res.send('Bad Key');
     }
 });
+
+app.get('/minutely', function(req, res) {
+    if (keyIsValid(req)) {
+        raincheck.getMinutelyForecast().then(weather => res.send(weather));
+    } else {
+        res.send('Bad Key');
+    }
+});
+
+app.get('/super', function(req, res) {
+    if (keyIsValid(req)) {
+        raincheck.getSuperData().then(weather => res.send(weather));
+    } else {
+        res.send('Bad Key');
+    }
+});
+
+function keyIsValid(req) {
+    return (
+        req.query.key === process.env.SECRET_KEY && req.query.key !== undefined
+    );
+}
