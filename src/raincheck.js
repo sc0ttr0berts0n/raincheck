@@ -74,6 +74,21 @@ class Raincheck {
                 return 'Internal Error: ' + weather.minutely.data;
             });
     }
+    getHourlyForecast() {
+        return darksky
+            .options({
+                latitude: process.env.LAT,
+                longitude: process.env.LON,
+                language: 'en',
+                exclude: ['currently', 'minutely', 'daily', 'alerts', 'flags']
+            })
+            .get()
+            .then(weather => weather.hourly.data[0])
+            .catch(data => {
+                console.log(weather.hourly.data);
+                return 'Internal Error: ' + weather.hourly.data;
+            });
+    }
     getSuperData() {
         return darksky
             .options({
